@@ -1,22 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import { io } from "socket.io-client";
+import { useEffect } from "react";
+import "./App.css";
+const socket = io(`http://localhost:8080/compile`, {
+  autoConnect: false,
+});
 
 function App() {
+  useEffect(() => {
+    socket.open();
+  });
+  const sendCompile = () => {
+    socket.emit("blockEditor", {
+      code: "void setup(){} void loop(){}",
+    });
+  };
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          onClick={() => {
+            sendCompile();
+          }}
         >
-          Learn React
-        </a>
+          컴파일 서버로 전송
+        </button>
       </header>
     </div>
   );
